@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'dart:async';
 import '../../../data/models/product_model.dart';
 import '../../../data/repositories/product_repository.dart';
+import 'package:smart_shopping_app/app/core/ utils/snackbar_helper.dart';
+
 
 class HomeController extends GetxController {
   final ProductRepository _productRepository = ProductRepository();
@@ -30,7 +32,6 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     print('✅ HomeController initialized');
-
     loadProducts();
     setupListeners();
     _startAutoRefresh();
@@ -46,45 +47,26 @@ class HomeController extends GetxController {
   void setupListeners() {
     debounce(searchQuery, (_) => filterProducts(),
         time: const Duration(milliseconds: 500));
-
     ever(selectedCategory, (_) => filterProducts());
-
     once(products, (_) {
       if (products.isNotEmpty) {
-        Get.snackbar(
-          'সফল!',
-          '${products.length}টি পণ্য লোড হয়েছে',
-          snackPosition: SnackPosition.TOP,
-          duration: const Duration(seconds: 2),
-          backgroundColor: Colors.green.withOpacity(0.1),
-          colorText: Colors.green[800],
-        );
+        SnackbarHelper.showSuccess('${products.length}টি পণ্য লোড হয়েছে');
       }
     });
   }
 
   // প্রোডাক্ট লোড করা
   Future<void> loadProducts() async {
-    if (isLoading.value) return; // ডাবল লোড প্রিভেন্ট
-
+    if (isLoading.value) return;
     try {
       isLoading.value = true;
-
       final fetchedProducts = await _productRepository.getAllProducts();
-
-      // অপ্রয়োজনীয় রি-বিল্ড এড়ানো
       products.assignAll(fetchedProducts);
-      filterProducts(); // ফিল্টারও আপডেট করা
+      filterProducts();
 
     } catch (e) {
       print('Error loading products: $e');
-      Get.snackbar(
-        'ত্রুটি',
-        'পণ্য লোড করতে সমস্যা হয়েছে',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.withOpacity(0.1),
-        colorText: Colors.red[800],
-      );
+      SnackbarHelper.showError('পণ্য লোড করতে সমস্যা হয়েছে');
     } finally {
       isLoading.value = false;
     }
@@ -110,30 +92,17 @@ class HomeController extends GetxController {
   }
 
   // ========== Favorite Methods ==========
-
-  /// প্রোডাক্টটা ফেভারিট কি না চেক করে
   bool isFavorite(String productId) {
     return favoriteIds.contains(productId);
   }
 
-  /// ফেভারিট টগল করে
   void toggleFavorite(String productId) {
     if (favoriteIds.contains(productId)) {
       favoriteIds.remove(productId);
-      Get.snackbar(
-        'ফেভারিট',
-        'প্রোডাক্ট ফেভারিট থেকে সরানো হয়েছে',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 1),
-      );
+      SnackbarHelper.showError('প্রোডাক্ট ফেভারিট থেকে সরানো হয়েছে');
     } else {
       favoriteIds.add(productId);
-      Get.snackbar(
-        'ফেভারিট',
-        'প্রোডাক্ট ফেভারিটে যোগ হয়েছে',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 1),
-      );
+      SnackbarHelper.showSuccess('প্রোডাক্ট ফেভারিটে যোগ হয়েছে');
     }
   }
 
@@ -146,7 +115,7 @@ class HomeController extends GetxController {
     });
   }
 
-  // ম্যানুয়াল রিফ্রেশ
+  // ম্যানুয়াল রিফ্রেশ
   Future<void> refreshProducts() async {
     await loadProducts();
   }

@@ -5,6 +5,7 @@ class User {
   final String phone;
   final String? avatar;
   final String? address;
+  final String? token;
 
   User({
     required this.id,
@@ -13,9 +14,10 @@ class User {
     required this.phone,
     this.avatar,
     this.address,
+    this.token,
   });
 
-  // JSON থেকে Object
+  // JSON থেকে Object তৈরি
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id']?.toString() ?? '',
@@ -24,10 +26,11 @@ class User {
       phone: json['phone'] ?? '',
       avatar: json['avatar'],
       address: json['address'],
+      token: json['token'] ?? json['access_token'],
     );
   }
 
-  // Object থেকে JSON
+  // Object থেকে JSON তৈরি
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -36,6 +39,7 @@ class User {
       'phone': phone,
       'avatar': avatar,
       'address': address,
+      'token': token,
     };
   }
 
@@ -47,6 +51,7 @@ class User {
     String? phone,
     String? avatar,
     String? address,
+    String? token,
   }) {
     return User(
       id: id ?? this.id,
@@ -55,6 +60,7 @@ class User {
       phone: phone ?? this.phone,
       avatar: avatar ?? this.avatar,
       address: address ?? this.address,
+      token: token ?? this.token,
     );
   }
 }

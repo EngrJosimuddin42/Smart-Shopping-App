@@ -50,11 +50,9 @@ class StorageService extends GetxService {
     await _prefs.setString(_tokenKey, token);
     print('✅ Token saved');
   }
-
   String? getToken() {
     return _prefs.getString(_tokenKey);
   }
-
   Future<void> removeToken() async {
     await _prefs.remove(_tokenKey);
     print('✅ Token removed');

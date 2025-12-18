@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
 import '../../../routes/app_routes.dart';
+import 'package:smart_shopping_app/app/core/ utils/snackbar_helper.dart';
 
 class LoginPage extends GetView<AuthController> {
   final TextEditingController emailController = TextEditingController();
@@ -90,18 +91,16 @@ class LoginPage extends GetView<AuthController> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
-                      Get.snackbar(
-                        'আসছে শীঘ্রই',
-                        'পাসওয়ার্ড রিসেট ফিচার শীঘ্রই আসছে',
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                    },
-                    child: Text(
+                    onPressed: () => Get.toNamed(Routes.FORGOT_PASSWORD),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                    ),
+                    child: const Text(
                       'পাসওয়ার্ড ভুলে গেছেন?',
                       style: TextStyle(
-                        color: Colors.blue,
                         fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -177,11 +176,7 @@ class LoginPage extends GetView<AuthController> {
                   height: 56,
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      Get.snackbar(
-                        'আসছে শীঘ্রই',
-                        'Google Login শীঘ্রই আসছে',
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
+                      SnackbarHelper.showSuccess('Google Login শীঘ্রই আসছে');
                     },
                     icon: Image.asset(
                       'assets/icons/google.png',

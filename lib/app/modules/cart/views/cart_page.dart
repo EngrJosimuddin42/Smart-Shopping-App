@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/cart_controller.dart';
 import '../../../core/constants/app_constants.dart';
+import 'package:smart_shopping_app/app/core/ utils/snackbar_helper.dart';
 
 class CartPage extends GetView<CartController> {
   const CartPage({Key? key}) : super(key: key);
@@ -89,14 +90,7 @@ class CartPage extends GetView<CartController> {
           ),
           onDismissed: (direction) {
             controller.removeFromCart(item.product.id);
-            Get.snackbar(
-              'সরানো হয়েছে',
-              '${item.product.name} কার্ট থেকে সরানো হয়েছে',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.red.withOpacity(0.8),
-              colorText: Colors.white,
-              duration: const Duration(seconds: 2),
-            );
+            SnackbarHelper.showError('${item.product.name} কার্ট থেকে সরানো হয়েছে');
           },
           child: Card(
             elevation: 3,
@@ -106,7 +100,6 @@ class CartPage extends GetView<CartController> {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  // Product Image (যদি ইমেজ থাকে তাহলে দেখাবে)
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: item.product.image != null && item.product.image!.isNotEmpty
@@ -228,14 +221,7 @@ class CartPage extends GetView<CartController> {
               height: 56,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.snackbar(
-                    'সফল!',
-                    'আপনার অর্ডার গ্রহণ করা হয়েছে!',
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white,
-                    duration: const Duration(seconds: 3),
-                    snackPosition: SnackPosition.TOP,
-                  );
+                  SnackbarHelper.showSuccess('আপনার অর্ডার গ্রহণ করা হয়েছে! 🎉');
                   controller.clearCart();
                   Get.back();
                 },
@@ -269,7 +255,7 @@ class CartPage extends GetView<CartController> {
             onPressed: () {
               Get.back();
               controller.clearCart();
-              Get.snackbar('খালি করা হয়েছে', 'কার্ট থেকে সব পণ্য সরানো হয়েছে');
+              SnackbarHelper.showSuccess('কার্ট থেকে সব পণ্য সরানো হয়েছে');
             },
             child: const Text('হ্যাঁ, খালি করুন', style: TextStyle(fontSize: 16)),
           ),

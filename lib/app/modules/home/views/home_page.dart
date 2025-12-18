@@ -85,7 +85,6 @@ class HomePage extends GetView<HomeController> {
     return SizedBox(
       height: 50,
       child: Obx(() {
-        // এখানে controller কাজ করবে কারণ GetView<HomeController> ব্যবহার করা হয়েছে
         final categories = controller.categories;
         final selected = controller.selectedCategory.value;
 

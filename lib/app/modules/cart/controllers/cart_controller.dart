@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../../../data/models/cart_item_model.dart';
 import '../../../data/models/product_model.dart';
 import '../../../services/storage_service.dart';
+import 'package:smart_shopping_app/app/core/ utils/snackbar_helper.dart';
 
 class CartController extends GetxController {
   final StorageService _storageService = Get.find<StorageService>();
@@ -18,7 +19,7 @@ class CartController extends GetxController {
 
     loadCart();
 
-    // ever - Cart change হলে total calculate করো
+    // cartItems পরিবর্তন হলে অটোমেটিক টোটাল ক্যালকুলেট এবং সেভ হবে
     ever(cartItems, (_) {
       calculateTotal();
       saveCart();
@@ -38,37 +39,25 @@ class CartController extends GetxController {
 
   // Add to cart
   void addToCart(Product product) {
-    // Check if product already in cart
     final existingIndex = cartItems.indexWhere(
           (item) => item.product.id == product.id,
     );
 
     if (existingIndex != -1) {
-      // Increase quantity
+      // পরিমাণ বাড়ানো
       cartItems[existingIndex].quantity++;
-      cartItems.refresh(); // Force update
+      cartItems.refresh();
     } else {
-      // Add new item
+      // নতুন আইটেম যোগ করা
       cartItems.add(CartItem(product: product, quantity: 1));
     }
-
-    Get.snackbar(
-      'Added',
-      '${product.name} কার্টে যোগ হয়েছে',
-      snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: 2),
-    );
+    SnackbarHelper.showSuccess('${product.name} কার্টে যোগ হয়েছে');
   }
 
   // Remove from cart
   void removeFromCart(String productId) {
     cartItems.removeWhere((item) => item.product.id == productId);
-
-    Get.snackbar(
-      'Removed',
-      'কার্ট থেকে মুছে ফেলা হয়েছে',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    SnackbarHelper.showError('কার্ট থেকে মুছে ফেলা হয়েছে');
   }
 
   // Increase quantity
@@ -76,7 +65,6 @@ class CartController extends GetxController {
     final index = cartItems.indexWhere(
           (item) => item.product.id == productId,
     );
-
     if (index != -1) {
       cartItems[index].quantity++;
       cartItems.refresh();
@@ -115,8 +103,10 @@ class CartController extends GetxController {
 
   // Clear cart
   void clearCart() {
-    cartItems.clear();
-    Get.snackbar('Success', 'কার্ট খালি করা হয়েছে');
+    if (cartItems.isNotEmpty) {
+      cartItems.clear();
+      SnackbarHelper.showSuccess('কার্ট খালি করা হয়েছে');
+    }
   }
 
   @override

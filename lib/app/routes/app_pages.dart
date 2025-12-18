@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:smart_shopping_app/app/modules/auth/bindings/forgot_password_binding.dart';
+import 'package:smart_shopping_app/app/modules/auth/views/forgot_password_page.dart';
 import '../modules/auth/bindings/auth_binding.dart';
 import '../modules/auth/views/login_page.dart';
 import '../modules/auth/views/signup_page.dart';
@@ -16,7 +18,7 @@ import 'app_routes.dart';
 
 
 class AppPages {
-  static const INITIAL = Routes.LOGIN; // HOME থেকে LOGIN করুন
+  static const INITIAL = Routes.LOGIN;
 
   static final routes = [
     GetPage(
@@ -25,12 +27,16 @@ class AppPages {
       binding: AuthBinding(),
       transition: Transition.fadeIn,
     ),
-    // Signup page entry নতুন add করুন
     GetPage(
       name: Routes.SIGNUP,
       page: () => SignupPage(),
       binding: AuthBinding(),
       transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: Routes.FORGOT_PASSWORD,
+      page: () => const ForgotPasswordPage(),
+      binding: ForgotPasswordBinding(),
     ),
     GetPage(
       name: Routes.HOME,

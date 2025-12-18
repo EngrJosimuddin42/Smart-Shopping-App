@@ -1,11 +1,13 @@
-import 'package:get/Get.dart';
+import 'package:get/get.dart';
 import '../../../data/models/product_model.dart';
 import '../../cart/controllers/cart_controller.dart';
-import '../../favorite/controllers/favorite_controller.dart';  // শুধু এটা রাখো, HomeController রিমুভ করো
+import '../../favorite/controllers/favorite_controller.dart';
+import 'package:smart_shopping_app/app/core/ utils/snackbar_helper.dart';
+
 
 class ProductDetailsController extends GetxController {
   final CartController _cartController = Get.find<CartController>();
-  final FavoriteController _favoriteController = Get.find<FavoriteController>();  // শুধু এটা ব্যবহার করো
+  final FavoriteController _favoriteController = Get.find<FavoriteController>();
 
   var product = Rxn<Product>();
   var quantity = 1.obs;
@@ -24,7 +26,7 @@ class ProductDetailsController extends GetxController {
 
   void _checkIfFavorite() {
     if (product.value != null) {
-      isFavorite.value = _favoriteController.isFavorite(product.value!);  // FavoriteController থেকে চেক
+      isFavorite.value = _favoriteController.isFavorite(product.value!);
     }
   }
 
@@ -32,7 +34,7 @@ class ProductDetailsController extends GetxController {
     if (product.value != null && quantity.value < product.value!.stock) {
       quantity++;
     } else {
-      Get.snackbar('Stock Limit', 'স্টকে আর নেই', snackPosition: SnackPosition.BOTTOM);
+      SnackbarHelper.showError('দুঃখিত, স্টকে আর পণ্য নেই');
     }
   }
 
@@ -44,25 +46,24 @@ class ProductDetailsController extends GetxController {
 
   void addToCart() {
     if (product.value != null) {
+      // কার্ট কন্ট্রোলারে পণ্য যোগ করা হচ্ছে
       for (int i = 0; i < quantity.value; i++) {
         _cartController.addToCart(product.value!);
       }
-
-      Get.snackbar(
-        'Success',
+      SnackbarHelper.showSuccess(
         '${quantity.value}টি ${product.value!.name} কার্টে যোগ হয়েছে',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
       );
 
+      // পণ্য যোগ করার পর কোয়ান্টিটি রিসেট
       quantity.value = 1;
     }
   }
 
   void toggleFavorite() {
     if (product.value != null) {
-      _favoriteController.toggleFavorite(product.value!);  // শুধু FavoriteController ব্যবহার করো
-      isFavorite.value = !isFavorite.value;  // UI আপডেটের জন্য
+      _favoriteController.toggleFavorite(product.value!);
+      // ফেভারিট স্ট্যাটাস আপডেট করা
+      isFavorite.value = !isFavorite.value;
     }
   }
 

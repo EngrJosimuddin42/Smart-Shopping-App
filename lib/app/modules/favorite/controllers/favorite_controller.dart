@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:smart_shopping_app/app/data/models/product_model.dart';
 import '../../../services/storage_service.dart';
+import 'package:smart_shopping_app/app/core/ utils/snackbar_helper.dart';
 
 class FavoriteController extends GetxController {
   final StorageService _storageService = Get.find<StorageService>();
@@ -25,27 +26,23 @@ class FavoriteController extends GetxController {
     _storageService.saveFavorites(favoriteProducts);
   }
 
+  // Toggle Favorite
   void toggleFavorite(Product product) {
     if (isFavorite(product)) {
+      // পছন্দের তালিকা থেকে মুছে ফেলা
       favoriteProducts.removeWhere((p) => p.id == product.id);
-      Get.snackbar(
-        'Removed',
-        '${product.name} পছন্দের তালিকা থেকে মুছে ফেলা হয়েছে',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 1),
-      );
+      SnackbarHelper.showError('${product.name} পছন্দের তালিকা থেকে মুছে ফেলা হয়েছে');
     } else {
+      // পছন্দের তালিকায় যোগ করা
       favoriteProducts.add(product);
-      Get.snackbar(
-        'Added',
-        '${product.name} পছন্দের তালিকায় যোগ হয়েছে',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 1),
-      );
+      SnackbarHelper.showSuccess('${product.name} পছন্দের তালিকায় যোগ হয়েছে');
     }
-    saveFavorites(); // Save after toggle
+
+    // লোকাল স্টোরেজে সেভ করা
+    saveFavorites();
   }
 
+  // Check if product is in favorites
   bool isFavorite(Product product) {
     return favoriteProducts.any((p) => p.id == product.id);
   }

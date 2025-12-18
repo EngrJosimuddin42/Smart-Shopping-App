@@ -7,7 +7,6 @@ class ProductRepository {
   // Get all products
   Future<List<Product>> getAllProducts() async {
     try {
-      // Simulate API call
       await Future.delayed(Duration(seconds: 1));
 
       // Mock data
@@ -16,12 +15,10 @@ class ProductRepository {
       throw Exception('Failed to fetch products: $e');
     }
   }
-
   // Get product by ID
   Future<Product> getProductById(String id) async {
     try {
       await Future.delayed(Duration(milliseconds: 500));
-
       return _getMockProducts().firstWhere((p) => p.id == id);
     } catch (e) {
       throw Exception('Product not found: $e');
@@ -32,7 +29,6 @@ class ProductRepository {
   Future<List<Product>> getProductsByCategory(String category) async {
     try {
       await Future.delayed(Duration(milliseconds: 500));
-
       return _getMockProducts()
           .where((p) => p.category == category)
           .toList();

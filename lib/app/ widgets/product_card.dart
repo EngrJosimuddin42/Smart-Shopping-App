@@ -26,11 +26,10 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ========== প্রোডাক্ট ইমেজ (কোনো ওভারলে ছাড়া) ==========
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               child: Container(
-                height: 160,  // ইমেজের উচ্চতা বাড়ালাম যাতে কার্ড সুন্দর দেখায়
+                height: 160,
                 width: double.infinity,
                 color: Colors.grey[200],
                 child: product.image != null && product.image!.isNotEmpty
@@ -46,8 +45,6 @@ class ProductCard extends StatelessWidget {
                     : const Icon(Icons.image, size: 60, color: Colors.grey),
               ),
             ),
-
-            // ========== নিচের অংশ — নাম, প্রাইস, ফেভারিট আইকন Row-এ ==========
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8),
@@ -55,7 +52,6 @@ class ProductCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // নাম + প্রাইস
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -73,11 +69,9 @@ class ProductCard extends StatelessWidget {
                       ],
                     ),
 
-                    // ========== ফেভারিট আইকন + কার্ট বাটন Row-এ ==========
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // ফেভারিট আইকন (বাম পাশে)
                         Obx(() {
                           final isFav = favoriteController.isFavorite(product);
                           return IconButton(
@@ -91,8 +85,6 @@ class ProductCard extends StatelessWidget {
                             onPressed: () => favoriteController.toggleFavorite(product),
                           );
                         }),
-
-                        // কার্টে যোগ করুন বাটন (ডান পাশে)
                         SizedBox(
                           height: 32,
                           child: ElevatedButton.icon(

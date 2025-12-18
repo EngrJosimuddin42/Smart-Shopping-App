@@ -9,7 +9,6 @@ class ProductDetailsPage extends GetView<ProductDetailsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ========== Scaffold-এর AppBar (ব্যাক বাটন + টাইটেল + ফেভারিট) ==========
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -43,13 +42,12 @@ class ProductDetailsPage extends GetView<ProductDetailsController> {
 
         return CustomScrollView(
           slivers: [
-            // ========== SliverAppBar (শুধু বড় ইমেজ + ফেভারিট, কোনো ব্যাক বাটন বা টাইটেল নেই) ==========
             SliverAppBar(
               expandedHeight: 360,
               pinned: true,
               stretch: true,
-              automaticallyImplyLeading: false, // ব্যাক বাটন অটো যোগ হবে না
-              title: const Text(''), // খালি টাইটেল
+              automaticallyImplyLeading: false,
+              title: const Text(''),
               backgroundColor: Colors.transparent,
               elevation: 0,
               flexibleSpace: FlexibleSpaceBar(

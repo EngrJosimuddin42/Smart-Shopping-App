@@ -2,32 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/profile_controller.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:smart_shopping_app/app/core/ utils/snackbar_helper.dart';
+
+
 class ProfilePage extends GetView<ProfileController> {
+  const ProfilePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('প্রোফাইল'),
+        title: const Text('প্রোফাইল'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // User info card
             _buildUserCard(),
-            SizedBox(height: 16),
-
-            // Settings
+            const SizedBox(height: 16),
             _buildSettingsSection(),
-            SizedBox(height: 16),
-
-            // About
+            const SizedBox(height: 16),
             _buildAboutSection(),
-            SizedBox(height: 16),
-
-            // Logout button
+            const SizedBox(height: 16),
             _buildLogoutButton(),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -39,9 +37,9 @@ class ProfilePage extends GetView<ProfileController> {
       final user = controller.user.value;
 
       return Card(
-        margin: EdgeInsets.all(16),
+        margin: const EdgeInsets.all(16),
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               CircleAvatar(
@@ -50,25 +48,25 @@ class ProfilePage extends GetView<ProfileController> {
                 child: user != null
                     ? Text(
                   user.name[0].toUpperCase(),
-                  style: TextStyle(fontSize: 36, color: Colors.white),
+                  style: const TextStyle(fontSize: 36, color: Colors.white),
                 )
-                    : Icon(Icons.person, size: 50, color: Colors.white),
+                    : const Icon(Icons.person, size: 50, color: Colors.white),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 user?.name ?? 'Guest User',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 user?.email ?? 'guest@example.com',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
               if (user?.phone != null && user!.phone!.isNotEmpty) ...[
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   user.phone!,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],
             ],
@@ -80,40 +78,47 @@ class ProfilePage extends GetView<ProfileController> {
 
   Widget _buildSettingsSection() {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          ListTile(
+          const ListTile(
             title: Text('সেটিংস',
                 style: TextStyle(fontWeight: FontWeight.bold)),
           ),
-          Divider(height: 1),
+          const Divider(height: 1),
 
           // Dark mode toggle
           Obx(() => SwitchListTile(
-            title: Text('ডার্ক মোড'),
-            subtitle: Text('থিম পরিবর্তন করুন'),
-            secondary: Icon(Icons.dark_mode),
+            title: const Text('ডার্ক মোড'),
+            subtitle: const Text('থিম পরিবর্তন করুন'),
+            secondary: const Icon(Icons.dark_mode),
             value: controller.isDarkMode.value,
             onChanged: controller.toggleDarkMode,
           )),
 
           // Notifications toggle
           Obx(() => SwitchListTile(
-            title: Text('নোটিফিকেশন'),
-            subtitle: Text('নোটিফিকেশন চালু/বন্ধ করুন'),
-            secondary: Icon(Icons.notifications),
+            title: const Text('নোটিফিকেশন'),
+            subtitle: const Text('নোটিফিকেশন চালু/বন্ধ করুন'),
+            secondary: const Icon(Icons.notifications),
             value: controller.notificationsEnabled.value,
-            onChanged: controller.toggleNotifications,
+            onChanged: (value) {
+              controller.toggleNotifications(value);
+              if(value) {
+                SnackbarHelper.showSuccess('নোটিফিকেশন চালু করা হয়েছে');
+              } else {
+                SnackbarHelper.showError('নোটিফিকেশন বন্ধ করা হয়েছে');
+              }
+            },
           )),
 
           ListTile(
-            leading: Icon(Icons.language),
-            title: Text('ভাষা'),
+            leading: const Icon(Icons.language),
+            title: const Text('ভাষা'),
             subtitle: Obx(() => Text(controller.settings['language'] ?? 'বাংলা')),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              Get.snackbar('Coming Soon', 'ভাষা পরিবর্তন শীঘ্রই আসছে');
+              SnackbarHelper.showSuccess('ভাষা পরিবর্তন শীঘ্রই আসছে');
             },
           ),
         ],
@@ -123,7 +128,7 @@ class ProfilePage extends GetView<ProfileController> {
 
   Widget _buildAboutSection() {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
           ListTile(
@@ -131,119 +136,23 @@ class ProfilePage extends GetView<ProfileController> {
             title: const Text('অ্যাপ সম্পর্কে'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              Get.dialog(
-                Dialog(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // App Icon (যদি থাকে)
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.blue.shade50,
-                          child: const Icon(Iconsax.shop, size: 40, color: Colors.blue),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // App Name
-                        const Text(
-                          'স্মার্ট শপিং',
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Version
-                        const Text(
-                          'সংস্করণ ১.০.০',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Description
-                        const Text(
-                          'একটি আধুনিক, দ্রুত ও নিরাপদ অনলাইন শপিং অ্যাপ্লিকেশন। '
-                              'GetX + Clean Architecture দিয়ে তৈরি করা হয়েছে। '
-                              'আপনার কেনাকাটার অভিজ্ঞতা আরও সহজ ও মজাদার করতে আমরা সবসময় কাজ করে যাচ্ছি।',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 15, height: 1.5),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Developer Credit
-                        const Text(
-                          'তৈরি করেছেন',
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-                        const Text(
-                          'জসিম উদ্দিন',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                          'Flutter Developer',
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Copyright
-                        Text(
-                          '© 2025 Smart Shopping. All rights reserved.',
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Close Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                            ),
-                            onPressed: () => Get.back(),
-                            child: const Text(
-                              'ঠিক আছে',
-                              style: TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                barrierDismissible: true,
-              );
+              _showAboutDialog();
             },
           ),
           ListTile(
-            leading: Icon(Icons.privacy_tip),
-            title: Text('গোপনীয়তা নীতি'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+            leading: const Icon(Icons.privacy_tip),
+            title: const Text('গোপনীয়তা নীতি'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              Get.snackbar('Coming Soon', 'শীঘ্রই আসছে');
+              SnackbarHelper.showSuccess('গোপনীয়তা নীতি শীঘ্রই আসছে');
             },
           ),
           ListTile(
-            leading: Icon(Icons.help),
-            title: Text('সাহায্য ও সহায়তা'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+            leading: const Icon(Icons.help),
+            title: const Text('সাহায্য ও সহায়তা'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              Get.snackbar('Help', 'help@smartshopping.com');
+              SnackbarHelper.showSuccess('যোগাযোগ: help@smartshopping.com');
             },
           ),
         ],
@@ -251,14 +160,90 @@ class ProfilePage extends GetView<ProfileController> {
     );
   }
 
+  // কাস্টম অ্যাবাউট ডায়ালগ
+  void _showAboutDialog() {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.blue.shade50,
+                child: const Icon(Iconsax.shop, size: 40, color: Colors.blue),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'স্মার্ট শপিং',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'সংস্করণ ১.০.০',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'একটি আধুনিক, দ্রুত ও নিরাপদ অনলাইন শপিং অ্যাপ্লিকেশন। '
+                    'GetX + Clean Architecture দিয়ে তৈরি করা হয়েছে।',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, height: 1.5),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'তৈরি করেছেন',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const Text(
+                'জসিম উদ্দিন',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  onPressed: () => Get.back(),
+                  child: const Text(
+                    'ঠিক আছে',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildLogoutButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: double.infinity,
         height: 50,
         child: ElevatedButton(
-          onPressed: controller.logout,
+          onPressed: () {
+            _showLogoutConfirmation();
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
@@ -266,7 +251,7 @@ class ProfilePage extends GetView<ProfileController> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.logout),
@@ -276,6 +261,21 @@ class ProfilePage extends GetView<ProfileController> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showLogoutConfirmation() {
+    Get.defaultDialog(
+      title: 'লগআউট',
+      middleText: 'আপনি কি নিশ্চিতভাবে লগআউট করতে চান?',
+      textConfirm: 'হ্যাঁ',
+      textCancel: 'না',
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      onConfirm: () {
+        Get.back();
+        controller.logout();
+      },
     );
   }
 }

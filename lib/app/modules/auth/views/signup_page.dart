@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
 import '../../../routes/app_routes.dart';
+import 'package:smart_shopping_app/app/core/ utils/snackbar_helper.dart';
 
 class SignupPage extends GetView<AuthController> {
   const SignupPage({Key? key}) : super(key: key);
@@ -225,12 +226,7 @@ class SignupPage extends GetView<AuthController> {
                 height: 56,
                 child: OutlinedButton.icon(
                   onPressed: () {
-                    // Google Sign Up logic
-                    Get.snackbar(
-                      'Coming Soon',
-                      'Google Sign Up will be available soon',
-                      snackPosition: SnackPosition.BOTTOM,
-                    );
+                    SnackbarHelper.showSuccess('Google Sign Up শীঘ্রই আসছে');
                   },
                   icon: Image.asset(
                     'assets/icons/google.png',

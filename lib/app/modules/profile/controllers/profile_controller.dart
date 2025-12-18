@@ -12,8 +12,6 @@ class ProfileController extends GetxController {
   var user = Rxn<User>();
   var isDarkMode = false.obs;
   var notificationsEnabled = true.obs;
-
-  // ========== Settings Map ==========
   var settings = <String, dynamic>{}.obs;
 
   @override
@@ -30,7 +28,6 @@ class ProfileController extends GetxController {
   }
 
   void loadSettings() {
-    // Load from storage or use defaults
     settings.value = {
       'language': 'বাংলা',
       'currency': '৳',
@@ -46,7 +43,6 @@ class ProfileController extends GetxController {
     // Change theme
     Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light);
   }
-
   void toggleNotifications(bool value) {
     notificationsEnabled.value = value;
     settings['notifications'] = value;

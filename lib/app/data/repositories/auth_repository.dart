@@ -3,6 +3,15 @@ import '../providers/api_provider.dart';
 
 class AuthRepository {
   final ApiProvider apiProvider = ApiProvider();
+  User _parseUserResponse(Map<String, dynamic> response) {
+    if (response.containsKey('data') && response['data'] != null && response['data'].containsKey('user')) {
+      return User.fromJson(response['data']['user']);
+    } else if (response.containsKey('user')) {
+      return User.fromJson(response['user']);
+    } else {
+      return User.fromJson(response);
+    }
+  }
 
   // Sign Up with Real API
   Future<User> signUp(String name, String email, String password) async {
@@ -11,17 +20,11 @@ class AuthRepository {
       final response = await apiProvider.signUp(name, email, password);
       print('✅ Signup successful');
 
-      // Parse user from response
-      if (response['data'] != null && response['data']['user'] != null) {
-        return User.fromJson(response['data']['user']);
-      } else if (response['user'] != null) {
-        return User.fromJson(response['user']);
-      } else {
-        return User.fromJson(response);
-      }
+      // Helper function ব্যবহার করে পার্সিং
+      return _parseUserResponse(response);
     } catch (e) {
       print('❌ Signup error: $e');
-      throw Exception('Registration failed: $e');
+      throw Exception('Registration failed: ${e.toString()}');
     }
   }
 
@@ -31,17 +34,10 @@ class AuthRepository {
       print('📤 Logging in user: $email');
       final response = await apiProvider.login(email, password);
       print('✅ Login successful');
-      if (response['data'] != null && response['data']['user'] != null) {
-        return User.fromJson(response['data']['user']);
-      } else if (response['user'] != null) {
-        return User.fromJson(response['user']);
-      } else {
-        return User.fromJson(response);
-      }
-
+      return _parseUserResponse(response);
     } catch (e) {
       print('❌ Login error: $e');
-      throw Exception('Login failed: $e');
+      throw Exception('Login failed: ${e.toString()}');
     }
   }
 
@@ -53,6 +49,7 @@ class AuthRepository {
       print('✅ Logout successful');
     } catch (e) {
       print('❌ Logout error: $e');
+      throw Exception('Logout failed: ${e.toString()}');
     }
   }
 
@@ -62,16 +59,10 @@ class AuthRepository {
       print('📤 Fetching current user');
       final response = await apiProvider.getCurrentUser();
       print('✅ User fetched successfully');
-      if (response['data'] != null && response['data']['user'] != null) {
-        return User.fromJson(response['data']['user']);
-      } else if (response['user'] != null) {
-        return User.fromJson(response['user']);
-      } else {
-        return User.fromJson(response);
-      }
+      return _parseUserResponse(response);
     } catch (e) {
       print('❌ Get user error: $e');
-      throw Exception('Failed to get current user: $e');
+      throw Exception('Failed to get current user: ${e.toString()}');
     }
   }
 
@@ -83,7 +74,7 @@ class AuthRepository {
       print('✅ Password reset email sent');
     } catch (e) {
       print('❌ Forgot password error: $e');
-      throw Exception('Failed to send reset email: $e');
+      throw Exception('Failed to send reset email: ${e.toString()}');
     }
   }
 
@@ -98,7 +89,7 @@ class AuthRepository {
       print('✅ Password reset successful');
     } catch (e) {
       print('❌ Reset password error: $e');
-      throw Exception('Failed to reset password: $e');
+      throw Exception('Failed to reset password: ${e.toString()}');
     }
   }
 
@@ -112,17 +103,10 @@ class AuthRepository {
         requiresAuth: true,
       );
       print('✅ Profile updated');
-      if (response['data'] != null && response['data']['user'] != null) {
-        return User.fromJson(response['data']['user']);
-      } else if (response['user'] != null) {
-        return User.fromJson(response['user']);
-      } else {
-        return User.fromJson(response);
-      }
-
+      return _parseUserResponse(response);
     } catch (e) {
       print('❌ Update profile error: $e');
-      throw Exception('Failed to update profile: $e');
+      throw Exception('Failed to update profile: ${e.toString()}');
     }
   }
 }
